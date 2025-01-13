@@ -9,7 +9,7 @@ import com.example.pertemuan15.ui.home.viewmodel.HomeViewModel
 
 object PenyediaViewModel {
     val Factory = viewModelFactory {
-        initializer { HomeViewModel(mahasiswaApp().container.RepositoryMhs) }
+        initializer { HomeViewModel(mahasiswaApp().container.repositoryMhs) }
     }
 }
 
