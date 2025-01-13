@@ -189,7 +189,7 @@ fun OnLoading(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = "Tunggu Bos..."
+        "Tunggu Bos..."
     )
 }
 
@@ -223,7 +223,7 @@ fun HomeScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = { Text("Home")},
