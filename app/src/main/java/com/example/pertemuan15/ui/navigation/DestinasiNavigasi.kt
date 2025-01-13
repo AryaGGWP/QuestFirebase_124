@@ -10,3 +10,8 @@ object DestinasiHome : DestinasiNavigasi{
     override val tirleRes: String = "home"
 }
 
+object DestinasiInsert : DestinasiNavigasi{
+    override val route: String = "insert"
+    override val tirleRes: String = "insert"
+}
+
