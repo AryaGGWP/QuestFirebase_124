@@ -11,13 +11,12 @@ import com.example.pertemuan15.ui.insert.pages.InsertMhsView
 
 @Composable
 fun PengelolaHalaman(
-    modifier: Modifier,
     navController: NavHostController = rememberNavController()
 ){
     NavHost(
         navController = navController,
         startDestination = DestinasiHome.route,
-        modifier = modifier
+        modifier = Modifier
     ){
         composable(DestinasiHome.route){
             HomeScreen(
