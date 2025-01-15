@@ -81,11 +81,11 @@ fun MhsCard(
     Card(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -95,7 +95,7 @@ fun MhsCard(
                     text = mahasiswa.nama,
                     style = MaterialTheme.typography.titleLarge,
                 )
-                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.weight(0.5f))
                 IconButton(onClick = { onDeleteClick(mahasiswa) }) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -106,13 +106,30 @@ fun MhsCard(
                     text = mahasiswa.nim,
                     style = MaterialTheme.typography.titleMedium
                 )
+                Spacer(Modifier.weight(0.5f))
+                Text(
+                    text = mahasiswa.kelas,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
             Text(
-                text = mahasiswa.kelas,
+                text = mahasiswa.alamat,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = mahasiswa.alamat,
+                text = mahasiswa.jenisKelamin,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = mahasiswa.angkatan,
+                style = MaterialTheme.typography.titleLarge
+            )
+            Text(
+                text = mahasiswa.judulSkripsi,
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = mahasiswa.dosenPembimbing,
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -154,7 +171,7 @@ fun HomeStatus(
     modifier: Modifier = Modifier,
     onDetailClick: (String) -> Unit,
     onDeleteClick: (Mahasiswa) -> Unit = {},
-){
+) {
     var deleteConfirmationRequired by rememberSaveable { mutableStateOf<Mahasiswa?>(null) }
     when (homeUiState) {
         is HomeUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
@@ -164,8 +181,8 @@ fun HomeStatus(
                 mahasiswa = homeUiState.data,
                 modifier = modifier.fillMaxWidth(),
                 onDetailClick = { onDetailClick(it) },
-                onDeleteClick = {
-                    onDeleteClick(it)
+                onDeleteClick = { mahasiswa ->
+                    deleteConfirmationRequired = mahasiswa
                 }
             )
             deleteConfirmationRequired?.let { data ->
@@ -176,12 +193,18 @@ fun HomeStatus(
                     },
                     onDeleteCancel = {
                         deleteConfirmationRequired = null
-                    })
+                    }
+                )
             }
         }
-        is HomeUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize(), message = homeUiState.exception.message ?: "Error")
+        is HomeUiState.Error -> OnError(
+            retryAction,
+            modifier = modifier.fillMaxSize(),
+            message = homeUiState.exception.message ?: "Error"
+        )
     }
 }
+
 
 @Composable
 fun OnLoading(
@@ -225,26 +248,29 @@ fun HomeScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text("Home")},
+                title = { Text("Home") },
             )
         },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToItemEntry,
-                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(18.dp)
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.padding(18.dp)
             ) {
-                Icon(imageVector = Icons.Default.AddCircle, contentDescription = "Add Mahasiswa")
+                Icon(
+                    imageVector = Icons.Default.AddCircle,
+                    contentDescription = "Add Mahasiswa"
+                )
             }
         },
     ) { innerPadding ->
         HomeStatus(
             homeUiState = viewModel.mhsUIState,
-            retryAction = { viewModel.getMhs()
-                println("data" + viewModel.getMhs())},
+            retryAction = { viewModel.getMhs() },
             modifier = Modifier.padding(innerPadding),
             onDetailClick = onDetailClick,
-            onDeleteClick = {
-                viewModel.getMhs()
+            onDeleteClick = { mahasiswa ->
+                viewModel.deleteMhs(mahasiswa.nim)
             }
         )
     }

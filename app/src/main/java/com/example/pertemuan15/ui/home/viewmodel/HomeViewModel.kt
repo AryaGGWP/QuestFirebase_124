@@ -39,6 +39,17 @@ class HomeViewModel (
                 }
         }
     }
+
+    fun deleteMhs(nim: String) {
+        viewModelScope.launch {
+            try {
+                repositoryMhs.deleteMhs(nim)
+                getMhs() // Refresh data setelah penghapusan
+            } catch (e: Exception) {
+                mhsUIState = HomeUiState.Error(Exception("Gagal menghapus data: ${e.message}"))
+            }
+        }
+    }
 }
 
 sealed class HomeUiState {
@@ -46,4 +57,6 @@ sealed class HomeUiState {
     data class Success(val data: List<Mahasiswa>) : HomeUiState()
     data class Error(val exception: Throwable) : HomeUiState()
 }
+
+
 
